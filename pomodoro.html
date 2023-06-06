@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POMODORO</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+
+    <div id="timer-box">
+        <div id="timer">
+            <input type="text" id="minutes" class="number">
+            <div id="separator" class="number">:</div>
+            <input type="text" id="seconds" class="number">
+        </div>
+        <button id="start-btn" onclick="startTime()">START</button>
+    </div>
+    <audio id="audio">
+        <source src="./win.wav" type="audio/wav">
+    </audio>
+
+    <script>
+        var intervalRefresh;
+        minutes = 0;
+        seconds = 0;
+
+        function runTimer() {
+           if(seconds > 0) {
+                decreaseSeconds();
+                displaySeconds();
+           } else if (minutes > 0) {
+                decreaseMinutes();
+                displayMinutes();
+                seconds = 59;
+                displaySeconds();
+           } else {
+             playMusic();
+             clearInterval(intervalRefresh);
+             enableButton();
+             enableInputs();
+           }
+        }
+
+        function startTime() {
+            getMinutes();
+            getSeconds();
+            displayMinutes();
+            displaySeconds();
+            disableButton();
+            disableInputs();
+            intervalRefresh = setInterval(runTimer, 1000);
+        }
+
+        function displaySeconds() {
+            if(seconds <= 9) {
+                document.getElementById('seconds').value = '0' + seconds;
+            }else {
+                document.getElementById('seconds').value = seconds;
+            }
+        }
+
+        function displayMinutes() {
+            if(minutes <= 9) {
+                document.getElementById('minutes').value = '0' + minutes;
+            }else {
+                document.getElementById('minutes').value = minutes;
+            }
+        }
+
+        function decreaseSeconds() {
+            return --seconds;
+        }
+
+        function decreaseMinutes() {
+            return --minutes;
+        }
+
+        function disableButton() {
+            document.getElementById('start-btn').disabled = true;
+        }
+
+        function disableInputs() {
+            document.getElementById('minutes').disabled = true;
+            document.getElementById('seconds').disabled = true;
+        }
+        
+        function enableButton() {
+            document.getElementById('start-btn').disabled = false;
+        }
+
+        function enableInputs() {
+            document.getElementById('minutes').disabled = false;
+            document.getElementById('seconds').disabled = false;
+        }
+        
+        function getMinutes() {
+            minutesInputValue = parseInt(document.getElementById('minutes').value);
+            
+            if (!isNaN(minutesInputValue)) {
+                minutes = minutesInputValue;
+            } else {
+                minutes = 0;
+            }
+        }
+
+        function getSeconds() {
+            secondsInputValue = parseInt(document.getElementById('seconds').value);
+            console.log(secondsInputValue);
+            if (!isNaN(secondsInputValue)) {
+                seconds = secondsInputValue;
+            } else {
+                seconds = 0;
+            }
+        }
+
+        function playMusic() {
+                document.getElementById('audio').play();
+        }
+    </script>
+    
+</body>
+</html>
